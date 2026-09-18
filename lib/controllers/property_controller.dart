@@ -66,11 +66,42 @@ class PropertyController extends ChangeNotifier {
   // --- Getters exposés aux Views ---
 
   List<PropertyModel> get properties => _properties;
+
+  /// Liste "propre" à afficher dans le fil de recherche : une seule
+  /// annonce "représentante" par groupe de doublons (la moins chère du
+  /// groupe), plus toutes les annonces indépendantes. C'est ce qui évite
+  /// de polluer le fil avec plusieurs cartes identiques pour la même offre
+  /// publiée par différentes agences — `clusterSize()` reste calculé sur
+  /// `_properties` (la liste complète), donc le badge affiche toujours
+  /// le vrai nombre d'agences.
+  List<PropertyModel> get displayProperties {
+    final Map<String, PropertyModel> representatives = {};
+    final List<PropertyModel> standalone = [];
+
+    for (final property in _properties) {
+      if (property.isPartOfCluster) {
+        final existing = representatives[property.clusterId];
+        if (existing == null || property.priceAmount < existing.priceAmount) {
+          representatives[property.clusterId!] = property;
+        }
+      } else {
+        standalone.add(property);
+      }
+    }
+
+    return [...standalone, ...representatives.values]
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
   Filters get activeFilters => _activeFilters;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
   bool isFavorite(String propertyId) => _favoriteIds.contains(propertyId);
+
+  /// Exposé pour permettre à une View de savoir *quels* ids sont favoris
+  /// (au-delà du simple `isFavorite(id)` booléen déjà disponible).
+  Set<String> get favoriteIds => Set.unmodifiable(_favoriteIds);
 
   /// Nombre d'annonces regroupées sous le même clusterId que [property].
   /// Retourne 1 si l'annonce n'appartient à aucun cluster (pas de badge à afficher).
@@ -94,24 +125,22 @@ class PropertyController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      Query query = _firestore
-          .collection('properties')
-          .orderBy('createdAt', descending: true);
-
-      if (filters.budgetMax != null) {
-        query = query.where(
-          'priceAmount',
-          isLessThanOrEqualTo: filters.budgetMax,
-        );
-      }
-      if (filters.city != null && filters.city!.isNotEmpty) {
-        query = query.where('city', isEqualTo: filters.city);
-      }
+      Query query = _firestore.collection('properties');
 
       final snapshot = await query.get();
       var results = snapshot.docs
           .map((doc) => PropertyModel.fromFirestore(doc))
           .toList();
+      results = results.where((p) => !p.isArchived).toList();
+
+      if (filters.budgetMax != null) {
+        results = results
+            .where((p) => p.priceAmount <= filters.budgetMax!)
+            .toList();
+      }
+      if (filters.city != null && filters.city!.isNotEmpty) {
+        query = query.where('city', isEqualTo: filters.city);
+      }
 
       // Filtres booléens appliqués côté client.
       if (filters.furnishedOnly) {
@@ -124,6 +153,8 @@ class PropertyController extends ChangeNotifier {
         results = results.where((p) => p.acceptsPublicGuarantee).toList();
       }
 
+      results.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
       _properties = results;
     } catch (e) {
       _errorMessage = "Impossible de charger les logements pour le moment.";
@@ -131,6 +162,19 @@ class PropertyController extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Récupère toutes les annonces appartenant au même groupe que [clusterId]
+  /// (ex: la même chambre publiée par plusieurs agences) — utilisé sur la
+  /// fiche détaillée pour permettre à l'étudiant de comparer les offres.
+  Future<List<PropertyModel>> fetchClusterMembers(String clusterId) async {
+    final snapshot = await _firestore
+        .collection('properties')
+        .where('clusterId', isEqualTo: clusterId)
+        .get();
+    return snapshot.docs
+        .map((doc) => PropertyModel.fromFirestore(doc))
+        .toList();
   }
 
   /// Charge la liste des favoris existants de l'utilisateur [uid].
@@ -151,6 +195,26 @@ class PropertyController extends ChangeNotifier {
       // on log silencieusement plutôt que d'afficher une erreur intrusive.
       debugPrint("Erreur chargement favoris: $e");
     }
+  }
+
+  /// Récupère les annonces complètes correspondant aux favoris de [uid].
+  /// Recharge d'abord la liste des ids favoris pour être sûr d'avoir
+  /// l'état le plus à jour (utile si l'écran des favoris est ouvert
+  /// directement, sans passer par l'écran de recherche au préalable).
+  Future<List<PropertyModel>> fetchFavoriteProperties(String uid) async {
+    await loadFavorites(uid);
+    if (_favoriteIds.isEmpty) return [];
+
+    // Note : `whereIn` est limité à 30 valeurs par Firestore. Largement
+    // suffisant pour un prototype ; au-delà, il faudrait paginer par lots.
+    final snapshot = await _firestore
+        .collection('properties')
+        .where(FieldPath.documentId, whereIn: _favoriteIds.toList())
+        .get();
+
+    return snapshot.docs
+        .map((doc) => PropertyModel.fromFirestore(doc))
+        .toList();
   }
 
   /// Ajoute ou retire [propertyId] des favoris de l'utilisateur [uid].
@@ -198,6 +262,54 @@ class PropertyController extends ChangeNotifier {
       return true;
     } catch (e) {
       _errorMessage = "Impossible de publier l'annonce.";
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Récupère toutes les annonces publiées par [ownerId] (actives ET
+  /// archivées) — contrairement à `fetchProperties()`, destiné au fil de
+  /// recherche étudiant, cette méthode alimente l'écran "Mes annonces"
+  /// du propriétaire, qui doit voir l'intégralité de son propre catalogue.
+  Future<List<PropertyModel>> fetchMyProperties(String ownerId) async {
+    final snapshot = await _firestore
+        .collection('properties')
+        .where('ownerId', isEqualTo: ownerId)
+        .get();
+    final properties = snapshot.docs
+        .map((doc) => PropertyModel.fromFirestore(doc))
+        .toList();
+    properties.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return properties;
+  }
+
+  /// Archive ou désarchive une annonce (soft delete) : elle disparaît du
+  /// fil de recherche étudiant sans perdre les données, contrairement à
+  /// `deleteProperty()` qui est irréversible.
+  Future<bool> setArchived(String propertyId, bool archived) async {
+    try {
+      await _firestore.collection('properties').doc(propertyId).update({
+        'isArchived': archived,
+      });
+      return true;
+    } catch (e) {
+      _errorMessage = "Impossible de mettre à jour l'annonce.";
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Supprime définitivement une annonce. Si elle appartenait à un
+  /// cluster, le badge "Offre regroupée" des annonces restantes du
+  /// groupe se réajuste automatiquement au prochain fetch, puisque
+  /// `clusterSize()` recompte simplement les annonces partageant le
+  /// même clusterId parmi celles encore présentes.
+  Future<bool> deleteProperty(String propertyId) async {
+    try {
+      await _firestore.collection('properties').doc(propertyId).delete();
+      return true;
+    } catch (e) {
+      _errorMessage = "Impossible de supprimer l'annonce.";
       notifyListeners();
       return false;
     }

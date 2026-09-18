@@ -111,6 +111,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
         acceptsPublicGuarantee: _acceptsPublicGuarantee,
         imageUrls: imageUrls,
         createdAt: DateTime.now(),
+        isArchived: false,
       );
 
       // 3. Détection de doublons : on cherche si une annonce similaire

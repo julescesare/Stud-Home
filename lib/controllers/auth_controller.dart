@@ -144,6 +144,20 @@ class AuthController extends ChangeNotifier {
     await _firebaseAuth.signOut();
   }
 
+  /// Récupère le profil d'un utilisateur quelconque à partir de son uid —
+  /// utilisé notamment pour afficher les coordonnées d'un propriétaire
+  /// sur la fiche détaillée d'une annonce (property.ownerId).
+  /// Contrairement à `_loadUserProfile()`, ne modifie pas `_currentUser`.
+  Future<UserModel?> fetchUserById(String uid) async {
+    try {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      if (!doc.exists) return null;
+      return UserModel.fromFirestore(doc);
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Traduit les codes d'erreur Firebase en messages compréhensibles
   /// pour un utilisateur français — évite d'exposer des messages
   /// techniques en anglais dans l'UI.

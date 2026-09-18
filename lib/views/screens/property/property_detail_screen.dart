@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stud_home/models/user_model.dart';
 import 'package:stud_home/theme/app_colors.dart';
 import 'package:stud_home/views/widgets/photo_carousel.dart';
 
@@ -93,6 +94,19 @@ class PropertyDetailScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 14),
+                        Text(
+                          property.description,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: _kGray600,
+                            height: 1.6,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        if (property.isPartOfCluster) ...[
+                          _buildClusterOffers(context),
+                          const SizedBox(height: 14),
+                        ],
                         _buildMapPlaceholder(),
                       ],
                     ),
@@ -193,6 +207,99 @@ class PropertyDetailScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildClusterOffers(BuildContext context) {
+    return FutureBuilder<List<PropertyModel>>(
+      future: context.read<PropertyController>().fetchClusterMembers(
+        property.clusterId!,
+      ),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox(
+            height: 40,
+            child: Center(
+              child: CircularProgressIndicator(strokeWidth: 2, color: _kIndigo),
+            ),
+          );
+        }
+
+        // On exclut l'annonce actuellement affichée de la liste.
+        final otherOffers = snapshot.data!
+            .where((p) => p.id != property.id)
+            .toList();
+        if (otherOffers.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.layers_outlined, size: 16, color: _kViolet),
+                const SizedBox(width: 6),
+                Text(
+                  "Ce logement est aussi proposé par ${otherOffers.length} autre${otherOffers.length > 1 ? 's' : ''} agence${otherOffers.length > 1 ? 's' : ''}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: _kGray800,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ...otherOffers.map(
+              (offer) => _buildClusterOfferTile(context, offer),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildClusterOfferTile(BuildContext context, PropertyModel offer) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => PropertyDetailScreen(property: offer),
+        ),
+      ),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: _kIndigoLight,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                offer.title,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: _kGray800,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              offer.formattedPrice,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: _kIndigo,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right, size: 16, color: _kIndigo),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildMapPlaceholder() {
     // TODO : intégrer google_maps_flutter avec les coordonnées géocodées
     // de streetAddress/city (hors scope du prototype pour l'instant).
@@ -230,10 +337,7 @@ class PropertyDetailScreen extends StatelessWidget {
           border: Border(top: BorderSide(color: _kGray200)),
         ),
         child: ElevatedButton(
-          onPressed: () {
-            // TODO Phase 6 : ouvrir un formulaire de contact ou lien mailto/tel
-            // vers le propriétaire (property.ownerId -> profil Firestore).
-          },
+          onPressed: () => _showContactModal(context, property.ownerId),
           style: ElevatedButton.styleFrom(
             backgroundColor: _kIndigo,
             foregroundColor: Colors.white,
@@ -248,6 +352,100 @@ class PropertyDetailScreen extends StatelessWidget {
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           ),
         ),
+      ),
+    );
+  }
+
+  /// Affiche une modale avec le nom complet et l'e-mail du propriétaire
+  /// de l'annonce, récupérés depuis Firestore via son uid (`property.ownerId`).
+  void _showContactModal(BuildContext context, String ownerId) {
+    showDialog(
+      context: context,
+      builder: (_) => FutureBuilder<UserModel?>(
+        future: context.read<AuthController>().fetchUserById(ownerId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const AlertDialog(
+              content: SizedBox(
+                height: 60,
+                child: Center(
+                  child: CircularProgressIndicator(color: _kIndigo),
+                ),
+              ),
+            );
+          }
+
+          final owner = snapshot.data;
+          if (owner == null) {
+            return AlertDialog(
+              title: const Text("Propriétaire introuvable"),
+              content: const Text(
+                "Impossible de récupérer les coordonnées du propriétaire.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Fermer"),
+                ),
+              ],
+            );
+          }
+
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              "Coordonnées du propriétaire",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.person_outline,
+                      size: 18,
+                      color: _kGray600,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        owner.fullName,
+                        style: const TextStyle(fontSize: 13, color: _kGray800),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.email_outlined,
+                      size: 18,
+                      color: _kGray600,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        owner.email,
+                        style: const TextStyle(fontSize: 13, color: _kGray800),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Fermer"),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

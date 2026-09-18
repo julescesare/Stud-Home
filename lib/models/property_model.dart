@@ -40,6 +40,7 @@ class PropertyModel {
 
   final List<String> imageUrls;
   final DateTime createdAt;
+  final bool isArchived;
 
   PropertyModel({
     required this.id,
@@ -61,6 +62,7 @@ class PropertyModel {
     required this.acceptsPublicGuarantee,
     required this.imageUrls,
     required this.createdAt,
+    required this.isArchived,
   });
 
   /// Construit un [PropertyModel] à partir d'un document Firestore.
@@ -97,6 +99,7 @@ class PropertyModel {
       imageUrls: List<String>.from(data['imageUrls'] ?? []),
 
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      isArchived: data['isArchived'] ?? false,
     );
   }
 
@@ -121,6 +124,7 @@ class PropertyModel {
       'acceptsPublicGuarantee': acceptsPublicGuarantee,
       'imageUrls': imageUrls,
       'createdAt': Timestamp.fromDate(createdAt),
+      'isArchived': isArchived,
     };
   }
 
@@ -133,7 +137,11 @@ class PropertyModel {
   bool get isPartOfCluster => clusterId != null && clusterId!.isNotEmpty;
 
   /// Copie modifiée, utile pour `toggleFavorite` ou les mises à jour partielles.
-  PropertyModel copyWith({String? clusterId, List<String>? imageUrls}) {
+  PropertyModel copyWith({
+    String? clusterId,
+    List<String>? imageUrls,
+    bool? isArchived,
+  }) {
     return PropertyModel(
       id: id,
       ownerId: ownerId,
@@ -154,6 +162,7 @@ class PropertyModel {
       acceptsPublicGuarantee: acceptsPublicGuarantee,
       imageUrls: imageUrls ?? this.imageUrls,
       createdAt: createdAt,
+      isArchived: isArchived ?? this.isArchived,
     );
   }
 }

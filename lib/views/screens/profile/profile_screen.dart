@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stud_home/views/screens/favorites/favorites_screen.dart';
+import 'package:stud_home/views/screens/property/my_properties_screen.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../../theme/app_colors.dart';
@@ -134,13 +136,22 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          _menuTile(
-            icon: Icons.favorite_border,
-            label: "Mes favoris",
-            onTap: () {
-              // TODO : écran dédié aux favoris, réutilisable avec PropertyController.
-            },
-          ),
+          if (user?.isStudent == true)
+            _menuTile(
+              icon: Icons.favorite_border,
+              label: "Mes favoris",
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const FavoritesScreen()),
+              ),
+            ),
+          if (user?.isOwner == true)
+            _menuTile(
+              icon: Icons.home_work_outlined,
+              label: "Mes annonces",
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const MyPropertiesScreen()),
+              ),
+            ),
           _menuTile(
             icon: Icons.settings_outlined,
             label: "Paramètres",
