@@ -174,16 +174,19 @@ class PropertyDetailScreen extends StatelessWidget {
 
   Widget _buildBadges() {
     final badges = <Widget>[];
-    if (property.acceptsHousingAid)
+    if (property.acceptsHousingAid) {
       badges.add(
         _badge("✓ Aides au logement", _kGreen, const Color(0xFFD1FAE5)),
       );
-    if (property.acceptsPublicGuarantee)
+    }
+    if (property.acceptsPublicGuarantee) {
       badges.add(
         _badge("✓ Garanties publiques", _kViolet, const Color(0xFFEDE9FE)),
       );
-    if (property.isFurnished)
+    }
+    if (property.isFurnished) {
       badges.add(_badge("🛋️ Meublé", _kOrange, const Color(0xFFFEF3C7)));
+    }
     badges.add(_badge(property.propertyType, _kGray600, _kGray100));
 
     return Wrap(spacing: 6, runSpacing: 6, children: badges);
@@ -302,7 +305,7 @@ class PropertyDetailScreen extends StatelessWidget {
 
   Widget _buildMapPlaceholder() {
     // TODO : intégrer google_maps_flutter avec les coordonnées géocodées
-    // de streetAddress/city (hors scope du prototype pour l'instant).
+    // de streetAddress/city (A faire plus tard).
     return Container(
       height: 90,
       decoration: BoxDecoration(

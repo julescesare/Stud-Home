@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
             "Le logement étudiant simplifié",
             style: TextStyle(
               fontSize: 13,
-              color: Colors.white.withOpacity(0.75),
+              color: Colors.white.withValues(alpha: 0.75),
             ),
           ),
         ],
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _kIndigo.withOpacity(0.10),
+            color: _kIndigo.withValues(alpha: 0.10),
             blurRadius: 32,
             offset: const Offset(0, 8),
           ),
@@ -205,7 +205,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Center(
               child: TextButton(
                 onPressed: () {
-                  // TODO : implémenter le flux de réinitialisation
                   // via auth.sendPasswordResetEmail() (à ajouter au Controller).
                 },
                 child: const Text(

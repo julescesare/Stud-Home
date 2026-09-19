@@ -90,9 +90,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         context: context,
         barrierDismissible: false,
         builder: (dialogContext) {
+          final navigator = Navigator.of(dialogContext);
           Future.delayed(const Duration(milliseconds: 1000), () {
-            if (Navigator.of(dialogContext).canPop()) {
-              Navigator.of(dialogContext).pop();
+            if (navigator.mounted && navigator.canPop()) {
+              navigator.pop();
             }
           });
           return const AlertDialog(
@@ -177,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
@@ -203,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             "Créer un compte",
             style: TextStyle(
               fontSize: 13,
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
             ),
           ),
           const SizedBox(height: 14),
@@ -221,7 +222,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         height: 28,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: active ? Colors.white : Colors.white.withOpacity(0.25),
+          color: active ? Colors.white : Colors.white.withValues(alpha: 0.25),
         ),
         alignment: Alignment.center,
         child: Text(
@@ -229,7 +230,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: active ? _kIndigo : Colors.white.withOpacity(0.6),
+            color: active ? _kIndigo : Colors.white.withValues(alpha: 0.6),
           ),
         ),
       );
@@ -244,7 +245,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Container(
               width: 32,
               height: 2,
-              color: _step > 1 ? Colors.white : Colors.white.withOpacity(0.3),
+              color: _step > 1
+                  ? Colors.white
+                  : Colors.white.withValues(alpha: 0.3),
             ),
             dot(2),
           ],
@@ -260,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 10,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
             ),
@@ -271,7 +274,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 10,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
             ),
@@ -292,7 +295,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _kIndigo.withOpacity(0.10),
+            color: _kIndigo.withValues(alpha: 0.10),
             blurRadius: 32,
             offset: const Offset(0, 8),
           ),
@@ -388,8 +391,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             placeholder: "••••••••••",
             obscureText: true,
             validator: (v) {
-              if (v != _passwordController.text)
+              if (v != _passwordController.text) {
                 return "Les mots de passe ne correspondent pas";
+              }
               return null;
             },
           ),
@@ -507,7 +511,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             boxShadow: selected
                 ? [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.10),
+                      color: Colors.black.withValues(alpha: 0.10),
                       blurRadius: 6,
                     ),
                   ]

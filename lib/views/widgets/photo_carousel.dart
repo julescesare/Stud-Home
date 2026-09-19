@@ -93,7 +93,7 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                       borderRadius: BorderRadius.circular(3),
                       color: active
                           ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                          : Colors.white.withValues(alpha: 0.5),
                     ),
                   );
                 }),
@@ -140,7 +140,10 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 6,
+            ),
           ],
         ),
         child: Icon(icon, size: 18, color: color),

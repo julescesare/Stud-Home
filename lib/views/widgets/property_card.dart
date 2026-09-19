@@ -22,6 +22,7 @@ class PropertyCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const PropertyCard({
+    super.key,
     required this.property,
     required this.clusterSize,
     required this.isFavorite,

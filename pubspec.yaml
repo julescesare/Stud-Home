@@ -43,6 +43,7 @@ dependencies:
   lottie: ^3.5.1
   http: ^1.6.0
   fake_cloud_firestore: ^4.3.0
+  firebase_auth_mocks: ^0.15.2
 
 dev_dependencies:
   flutter_test:

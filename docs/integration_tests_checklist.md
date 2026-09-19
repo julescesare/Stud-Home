@@ -1,5 +1,6 @@
 # Checklist de tests d'intégration manuels — Stud'Home
 
+Conforme au parcours défini dans le dossier de conception (section 6) :
 **Inscription → Dépôt de bien → Détection de doublon → Filtrage côté étudiant.**
 
 À exécuter avant chaque livraison, sur émulateur Android/iOS ou appareil réel.
@@ -28,7 +29,8 @@
 
 ## 3. Dépôt de bien (Écran 3 — nécessite un compte "Propriétaire")
 
-- [ ] Se connecter avec un compte propriétaire → le bouton flottant "Déposer" est visible (absent pour un compte étudiant)
+- [ ] Se connecter avec un compte propriétaire → dans le profil, le menu "Mes annonces" est visible (absent pour un compte étudiant, remplacé par "Mes favoris")
+- [ ] Depuis "Mes annonces", le bouton flottant "Déposer" est visible et ouvre bien le formulaire
 - [ ] Ajouter 2-3 photos → vérifier qu'elles s'affichent en miniature avant soumission
 - [ ] Soumettre le formulaire sans titre/description → validation bloque l'envoi
 - [ ] Soumettre un formulaire complet → loader "Vérification en cours…" affiché, puis confirmation animée
@@ -39,9 +41,12 @@
 
 - [ ] Déposer une première annonce : ville "Paris", surface 22, adresse "75 Av. d'Ivry"
 - [ ] Déposer une deuxième annonce avec un **autre compte propriétaire**, mêmes ville/surface (±2m²)/adresse (même si écrite différemment, ex. sans majuscules ni virgule)
-- [ ] Retourner à l'écran de recherche (Écran 1) → les deux annonces affichent le badge violet "Offre regroupée (2 agences)"
-- [ ] Déposer une troisième annonce correspondante → le badge passe à "(3 agences)"
-- [ ] Déposer une annonce avec une surface qui diffère de plus de 2m² → **pas** de regroupement
+- [ ] Retourner à l'écran de recherche (Écran 1) → **une seule carte** apparaît pour les deux annonces (pas deux cartes distinctes), avec le badge violet "Offre regroupée (2 agences)"
+- [ ] Déposer une troisième annonce correspondante → toujours une seule carte dans le fil, badge mis à jour "(3 agences)"
+- [ ] Ouvrir la fiche détaillée de l'annonce affichée → une section "Ce logement est aussi proposé par 2 autres agences" liste les offres alternatives (titre + prix)
+- [ ] Cliquer sur une offre alternative → la fiche se remplace par celle de cette annonce (pas d'empilement infini d'écrans si on clique plusieurs fois de suite)
+- [ ] Vérifier que le bouton "Contacter le propriétaire" pointe vers le **bon** propriétaire selon l'annonce du groupe actuellement affichée
+- [ ] Déposer une annonce avec une surface qui diffère de plus de 2m² → **pas** de regroupement (carte séparée, pas de badge)
 - [ ] Déposer une annonce dans une autre ville avec adresse identique → **pas** de regroupement
 
 ## 5. Filtrage côté étudiant (Écran 1)
@@ -84,8 +89,32 @@
 
 ## 10. Favoris
 
-- [ ] Ajouter une annonce en favori (cœur rouge + animation "pop") → se déconnecter/reconnecter → le favori est toujours marqué (persistance Firestore vérifiée)
-- [ ] Retirer le favori → vérifier dans Firestore que le document `users/{uid}/favorites/{propertyId}` a bien été supprimé
+- [ ] Ajouter une annonce en favori depuis le fil de recherche (cœur rouge + animation "pop") → se déconnecter/reconnecter → le favori est toujours marqué (persistance Firestore vérifiée)
+- [ ] Retirer le favori depuis le fil de recherche → vérifier dans Firestore que le document `users/{uid}/favorites/{propertyId}` a bien été supprimé
+- [ ] Ouvrir "Mes favoris" depuis le profil (compte étudiant) → les annonces mises en favori s'affichent, avec les mêmes informations que dans le fil de recherche
+- [ ] Retirer un favori **depuis l'écran "Mes favoris"** → la carte disparaît immédiatement de la liste, sans avoir à quitter/rouvrir l'écran
+- [ ] Aucun favori enregistré → message "Aucune annonce en favori pour l'instant." affiché, pas d'écran vide sans explication
+- [ ] Compte propriétaire → le menu "Mes favoris" n'apparaît pas dans le profil (remplacé par "Mes annonces")
+
+## 11. Prise de contact
+
+- [ ] Sur la fiche détaillée d'une annonce, cliquer sur "Contacter le propriétaire" → une modale s'affiche avec un loader bref
+- [ ] La modale affiche le **nom complet** et l'**e-mail** du propriétaire ayant publié cette annonce précise
+- [ ] Vérifier avec deux annonces de deux propriétaires différents que les coordonnées affichées changent bien en conséquence (pas de coordonnées "figées" ou du mauvais utilisateur)
+- [ ] Cas limite : propriétaire supprimé de Firestore après publication de son annonce → message "Propriétaire introuvable" affiché, pas de crash
+
+## 12. Suivi des annonces (MyPropertiesScreen — compte propriétaire)
+
+- [ ] Ouvrir "Mes annonces" depuis le profil → toutes les annonces publiées par ce compte s'affichent (actives ET archivées)
+- [ ] Aucune annonce publiée → message "Vous n'avez publié aucune annonce." affiché
+- [ ] Depuis cet écran, déposer une nouvelle annonce (bouton "Déposer") → au retour, la liste se rafraîchit automatiquement et la nouvelle annonce apparaît sans action manuelle
+- [ ] Archiver une annonce (menu ⋮ → "Archiver") → la carte reste visible ici mais grisée (opacité réduite) avec le badge "Archivée"
+- [ ] Vérifier que l'annonce archivée **n'apparaît plus** dans le fil de recherche étudiant (Écran 1)
+- [ ] Désarchiver la même annonce (menu ⋮ → "Désarchiver") → redevient visible dans le fil de recherche étudiant
+- [ ] Supprimer une annonce (menu ⋮ → "Supprimer") → boîte de confirmation affichée avant toute suppression
+- [ ] Confirmer la suppression → l'annonce disparaît de "Mes annonces" ET du fil de recherche étudiant, document bien supprimé dans Firestore
+- [ ] Supprimer une annonce qui fait partie d'un cluster → vérifier que le badge "Offre regroupée" des annonces restantes du groupe se met à jour (ex: passe de "3 agences" à "2 agences")
+- [ ] Cliquer sur une annonce dans "Mes annonces" → ouvre la fiche détaillée normale (même écran que côté étudiant)
 
 ---
 

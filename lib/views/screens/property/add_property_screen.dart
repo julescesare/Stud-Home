@@ -361,7 +361,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: _selectedImages.length + 1,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
                   itemBuilder: (_, i) {
                     if (i == _selectedImages.length) {
                       return Container(
@@ -495,7 +495,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               style: const TextStyle(fontSize: 12, color: _kGray700),
             ),
           ),
-          Switch(value: value, onChanged: onChanged, activeColor: _kIndigo),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: _kIndigo,
+          ),
         ],
       ),
     );
