@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:stud_home/models/property_model.dart';
 import 'package:stud_home/theme/app_colors.dart';
+import 'package:stud_home/theme/app_text_styles.dart';
 
 const _kIndigo = AppColors.indigo;
 const _kViolet = AppColors.violet;
@@ -72,10 +73,8 @@ class PropertyCard extends StatelessWidget {
                       ),
                       child: Text(
                         "Offre regroupée ($clusterSize agences)",
-                        style: const TextStyle(
+                        style: AppTextStyles.caption.copyWith(
                           color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -90,8 +89,8 @@ class PropertyCard extends StatelessWidget {
                               // Clé liée à l'état pour forcer flutter_animate à
                               // rejouer l'animation à chaque bascule favori/non-favori.
                               key: ValueKey(isFavorite),
-                              width: 28,
-                              height: 28,
+                              width: 44,
+                              height: 44,
                               decoration: const BoxDecoration(
                                 color: Colors.white70,
                                 shape: BoxShape.circle,
@@ -100,7 +99,7 @@ class PropertyCard extends StatelessWidget {
                                 isFavorite
                                     ? Icons.favorite
                                     : Icons.favorite_border,
-                                size: 14,
+                                size: 22,
                                 color: isFavorite
                                     ? Colors.redAccent
                                     : _kGray400,
@@ -128,11 +127,9 @@ class PropertyCard extends StatelessWidget {
                 children: [
                   Text(
                     property.title,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: _kGray800,
-                    ),
+                    style: AppTextStyles.bodyBold.copyWith(color: _kGray800),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -143,15 +140,16 @@ class PropertyCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: property.formattedPrice,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
+                              style: AppTextStyles.button.copyWith(
                                 color: _kIndigo,
                               ),
                             ),
-                            const TextSpan(
+                            TextSpan(
                               text: "/mois",
-                              style: TextStyle(fontSize: 11, color: _kGray400),
+                              style: AppTextStyles.caption.copyWith(
+                                color: _kGray400,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ],
                         ),
@@ -167,8 +165,8 @@ class PropertyCard extends StatelessWidget {
                         ),
                         child: Text(
                           "${property.surfaceSqm.toStringAsFixed(0)} m²",
-                          style: const TextStyle(
-                            fontSize: 11,
+                          style: AppTextStyles.caption.copyWith(
+                            fontWeight: FontWeight.w400,
                             color: _kGray600,
                           ),
                         ),

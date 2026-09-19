@@ -5,6 +5,7 @@ import '../../../controllers/auth_controller.dart';
 import '../../../controllers/property_controller.dart';
 import '../../../models/property_model.dart';
 import '../../../theme/app_colors.dart';
+import '../../../theme/app_text_styles.dart';
 import '../property/add_property_screen.dart';
 import '../property/property_detail_screen.dart';
 
@@ -101,13 +102,9 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Mes annonces",
-          style: TextStyle(
-            color: AppColors.gray800,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTextStyles.button.copyWith(color: AppColors.gray800),
         ),
         iconTheme: const IconThemeData(color: AppColors.gray800),
       ),
@@ -226,19 +223,14 @@ class _MyPropertyTile extends StatelessWidget {
           ),
           title: Text(
             property.title,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.gray800,
-            ),
+            style: AppTextStyles.bodyBold.copyWith(color: AppColors.gray800),
             overflow: TextOverflow.ellipsis,
           ),
           subtitle: Row(
             children: [
               Text(
                 property.formattedPrice,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: AppTextStyles.bodySmall.copyWith(
                   color: AppColors.indigo,
                   fontWeight: FontWeight.w600,
                 ),
@@ -254,9 +246,12 @@ class _MyPropertyTile extends StatelessWidget {
                     color: AppColors.gray100,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Archivée",
-                    style: TextStyle(fontSize: 9, color: AppColors.gray600),
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.gray600,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ],

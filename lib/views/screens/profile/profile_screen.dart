@@ -5,6 +5,7 @@ import 'package:stud_home/views/screens/property/my_properties_screen.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../../theme/app_colors.dart';
+import '../../../theme/app_text_styles.dart';
 
 const _kIndigo = AppColors.indigo;
 const _kIndigoLight = AppColors.indigoLight;
@@ -61,13 +62,9 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Profil",
-          style: TextStyle(
-            color: _kGray800,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTextStyles.button.copyWith(color: _kGray800),
         ),
         iconTheme: const IconThemeData(color: _kGray800),
       ),
@@ -90,26 +87,18 @@ class ProfileScreen extends StatelessWidget {
                             ? user!.fullName[0]
                             : "?")
                         .toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: AppTextStyles.title.copyWith(color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   user?.fullName ?? "",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: _kGray800,
-                  ),
+                  style: AppTextStyles.button.copyWith(color: _kGray800),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   user?.email ?? "",
-                  style: const TextStyle(fontSize: 12, color: _kGray600),
+                  style: AppTextStyles.bodySmall.copyWith(color: _kGray600),
                 ),
                 const SizedBox(height: 8),
                 Container(
@@ -125,11 +114,7 @@ class ProfileScreen extends StatelessWidget {
                     user?.isOwner == true
                         ? "🏠 Propriétaire"
                         : "🎓 Étudiant(e)",
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: _kIndigo,
-                    ),
+                    style: AppTextStyles.label.copyWith(color: _kIndigo),
                   ),
                 ),
               ],
@@ -165,7 +150,7 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 24),
           OutlinedButton.icon(
             onPressed: () => _confirmSignOut(context),
-            icon: const Icon(Icons.logout, color: Colors.redAccent, size: 18),
+            icon: const Icon(Icons.logout, color: Colors.redAccent, size: 22),
             label: const Text(
               "Se déconnecter",
               style: TextStyle(
@@ -193,12 +178,9 @@ class ProfileScreen extends StatelessWidget {
   }) {
     return ListTile(
       onTap: onTap,
-      leading: Icon(icon, color: _kGray600, size: 20),
-      title: Text(
-        label,
-        style: const TextStyle(fontSize: 13, color: _kGray800),
-      ),
-      trailing: const Icon(Icons.chevron_right, color: _kGray400, size: 18),
+      leading: Icon(icon, color: _kGray600, size: 24),
+      title: Text(label, style: AppTextStyles.body.copyWith(color: _kGray800)),
+      trailing: const Icon(Icons.chevron_right, color: _kGray400, size: 22),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
         side: const BorderSide(color: _kGray200),

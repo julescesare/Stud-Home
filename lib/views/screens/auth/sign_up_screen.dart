@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stud_home/theme/app_colors.dart';
+import 'package:stud_home/theme/app_text_styles.dart';
 
 import '../../../controllers/auth_controller.dart';
 
@@ -100,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             content: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.check_circle, color: Colors.green, size: 28),
+                Icon(Icons.check_circle, color: Colors.green, size: 30),
                 SizedBox(width: 12),
                 Expanded(child: Text("Compte créé avec succès !")),
               ],
@@ -184,15 +185,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: const Icon(
                   Icons.home_rounded,
                   color: Colors.white,
-                  size: 18,
+                  size: 22,
                 ),
               ),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 "Stud'Home",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
+                style: AppTextStyles.headline.copyWith(
                   color: Colors.white,
                   letterSpacing: -0.5,
                 ),
@@ -202,8 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           const SizedBox(height: 4),
           Text(
             "Créer un compte",
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.body.copyWith(
               color: Colors.white.withValues(alpha: 0.8),
             ),
           ),
@@ -227,8 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         alignment: Alignment.center,
         child: Text(
           _step > s ? "✓" : "$s",
-          style: TextStyle(
-            fontSize: 12,
+          style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w700,
             color: active ? _kIndigo : Colors.white.withValues(alpha: 0.6),
           ),
@@ -261,8 +258,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Text(
                 "Identité",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 10,
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w400,
                   color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
@@ -272,8 +269,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Text(
                 "Sécurité",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 10,
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w400,
                   color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
@@ -315,10 +312,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           const SizedBox(height: 8),
           _buildRoleSelector(),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             "Vos informations",
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.body.copyWith(
               fontWeight: FontWeight.w700,
               color: _kGray800,
             ),
@@ -364,10 +360,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
+          Text(
             "Sécurité & finalisation",
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.body.copyWith(
               fontWeight: FontWeight.w700,
               color: _kGray800,
             ),
@@ -406,16 +401,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 color: _kIndigoLight,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.info_outline, size: 16, color: _kIndigo),
+                  Icon(Icons.info_outline, size: 20, color: _kIndigo),
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       "Votre adresse universitaire sera vérifiée pour accéder aux offres réservées aux étudiants.",
-                      style: TextStyle(
-                        fontSize: 11,
+                      style: AppTextStyles.label.copyWith(
+                        fontWeight: FontWeight.w400,
                         color: _kIndigo,
                         height: 1.5,
                       ),
@@ -433,13 +428,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 activeColor: _kIndigo,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              const Expanded(
+              Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(top: 12),
                   child: Text.rich(
                     TextSpan(
-                      style: TextStyle(
-                        fontSize: 11,
+                      style: AppTextStyles.label.copyWith(
+                        fontWeight: FontWeight.w400,
                         color: Color(0xFF4B5563),
                         height: 1.5,
                       ),
@@ -474,12 +469,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildSectionLabel(String text) => Text(
     text.toUpperCase(),
-    style: const TextStyle(
-      fontSize: 11,
-      fontWeight: FontWeight.w600,
-      color: _kGray400,
-      letterSpacing: 0.5,
-    ),
+    style: AppTextStyles.label.copyWith(color: _kGray400, letterSpacing: 0.5),
   );
 
   Widget _buildRoleSelector() {
@@ -520,8 +510,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.center,
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
+            style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w600,
               color: selected ? _kIndigo : _kGray400,
             ),
@@ -544,11 +533,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF374151),
-          ),
+          style: AppTextStyles.label.copyWith(color: Color(0xFF374151)),
         ),
         const SizedBox(height: 4),
         TextFormField(
@@ -556,10 +541,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(fontSize: 12),
+          style: AppTextStyles.bodySmall,
           decoration: InputDecoration(
             hintText: placeholder,
-            hintStyle: const TextStyle(color: _kGray400, fontSize: 12),
+            hintStyle: AppTextStyles.bodySmall.copyWith(color: _kGray400),
             filled: true,
             fillColor: const Color(0xFFF9FAFB),
             contentPadding: const EdgeInsets.symmetric(
@@ -605,9 +590,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(13),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "← Retour",
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700),
               ),
             ),
           ),
@@ -638,8 +623,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 : Text(
                     _step == 1 ? "Continuer →" : "Créer mon compte",
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: AppTextStyles.body.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -652,9 +636,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildLoginLink() {
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
-      child: const Text.rich(
+      child: Text.rich(
         TextSpan(
-          style: TextStyle(fontSize: 11, color: _kGray400),
+          style: AppTextStyles.label.copyWith(
+            fontWeight: FontWeight.w400,
+            color: _kGray400,
+          ),
           children: [
             TextSpan(text: "Déjà un compte ? "),
             TextSpan(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stud_home/theme/app_colors.dart';
+import 'package:stud_home/theme/app_text_styles.dart';
 
 import '../../../controllers/auth_controller.dart';
 import 'sign_up_screen.dart';
@@ -103,15 +104,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Icon(
                   Icons.home_rounded,
                   color: Colors.white,
-                  size: 22,
+                  size: 26,
                 ),
               ),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 "Stud'Home",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
+                style: AppTextStyles.headline.copyWith(
                   color: Colors.white,
                   letterSpacing: -0.5,
                 ),
@@ -121,8 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(height: 6),
           Text(
             "Le logement étudiant simplifié",
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.body.copyWith(
               color: Colors.white.withValues(alpha: 0.75),
             ),
           ),
@@ -193,13 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.white,
                       ),
                     )
-                  : const Text(
-                      "Se connecter",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                  : Text("Se connecter", style: AppTextStyles.button),
             ),
             const SizedBox(height: 14),
             Center(
@@ -207,9 +199,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   // via auth.sendPasswordResetEmail() (à ajouter au Controller).
                 },
-                child: const Text(
+                child: Text(
                   "Mot de passe oublié ?",
-                  style: TextStyle(fontSize: 11, color: _kGray400),
+                  style: AppTextStyles.caption.copyWith(color: _kGray400),
                 ),
               ),
             ),
@@ -222,8 +214,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
                 child: RichText(
-                  text: const TextSpan(
-                    style: TextStyle(fontSize: 12, color: _kGray800),
+                  text: TextSpan(
+                    style: AppTextStyles.caption.copyWith(color: _kGray800),
                     children: [
                       TextSpan(text: "Pas encore de compte ? "),
                       TextSpan(
@@ -257,11 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF374151),
-          ),
+          style: AppTextStyles.label.copyWith(color: Color(0xFF374151)),
         ),
         const SizedBox(height: 5),
         TextFormField(
@@ -269,10 +257,10 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(fontSize: 13),
+          style: AppTextStyles.body,
           decoration: InputDecoration(
             hintText: placeholder,
-            hintStyle: const TextStyle(color: _kGray400, fontSize: 13),
+            hintStyle: AppTextStyles.body.copyWith(color: _kGray400),
             filled: true,
             fillColor: const Color(0xFFF9FAFB),
             contentPadding: const EdgeInsets.symmetric(

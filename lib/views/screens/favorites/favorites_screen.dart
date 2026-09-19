@@ -5,6 +5,7 @@ import '../../../controllers/auth_controller.dart';
 import '../../../controllers/property_controller.dart';
 import '../../../models/property_model.dart';
 import '../../../theme/app_colors.dart';
+import '../../../theme/app_text_styles.dart';
 import '../../widgets/property_card.dart';
 import '../property/property_detail_screen.dart';
 
@@ -47,13 +48,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Mes favoris",
-          style: TextStyle(
-            color: AppColors.gray800,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTextStyles.button.copyWith(color: AppColors.gray800),
         ),
         iconTheme: const IconThemeData(color: AppColors.gray800),
       ),

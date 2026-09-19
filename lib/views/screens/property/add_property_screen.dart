@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:stud_home/theme/app_colors.dart';
+import 'package:stud_home/theme/app_text_styles.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/deduplication_controller.dart';
@@ -191,13 +192,9 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Déposer une annonce",
-          style: TextStyle(
-            color: _kGray800,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTextStyles.button.copyWith(color: _kGray800),
         ),
         iconTheme: const IconThemeData(color: _kGray800),
       ),
@@ -299,19 +296,15 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                           child: Lottie.asset('assets/animations/loading.json'),
                         ),
                         const SizedBox(width: 10),
-                        const Text(
+                        Text(
                           "Vérification en cours…",
-                          style: TextStyle(fontSize: 13, color: Colors.white),
+                          style: AppTextStyles.body.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     )
-                  : const Text(
-                      "Publier l'annonce",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                  : Text("Publier l'annonce", style: AppTextStyles.button),
             ),
           ],
         ),
@@ -333,18 +326,17 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
           borderRadius: BorderRadius.circular(14),
         ),
         child: _selectedImages.isEmpty
-            ? const Column(
+            ? Column(
                 children: [
                   Icon(
                     Icons.add_photo_alternate_outlined,
-                    size: 28,
+                    size: 30,
                     color: _kIndigoMid,
                   ),
                   SizedBox(height: 6),
                   Text(
                     "Ajouter des photos",
-                    style: TextStyle(
-                      fontSize: 12,
+                    style: AppTextStyles.bodySmall.copyWith(
                       fontWeight: FontWeight.w600,
                       color: _kIndigo,
                     ),
@@ -352,7 +344,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   SizedBox(height: 2),
                   Text(
                     "Glisser-déposer ou prendre une photo",
-                    style: TextStyle(fontSize: 10, color: _kGray400),
+                    style: AppTextStyles.caption.copyWith(color: _kGray400),
                   ),
                 ],
               )
@@ -400,24 +392,17 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: _kGray700,
-          ),
-        ),
+        Text(label, style: AppTextStyles.label.copyWith(color: _kGray700)),
         const SizedBox(height: 4),
         TextFormField(
           controller: controller,
           maxLines: maxLines,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(fontSize: 12),
+          style: AppTextStyles.bodySmall,
           decoration: InputDecoration(
             hintText: placeholder,
-            hintStyle: const TextStyle(color: _kGray400, fontSize: 12),
+            hintStyle: AppTextStyles.bodySmall.copyWith(color: _kGray400),
             filled: true,
             fillColor: _kGray50,
             contentPadding: const EdgeInsets.symmetric(
@@ -492,7 +477,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(fontSize: 12, color: _kGray700),
+              style: AppTextStyles.bodySmall.copyWith(color: _kGray700),
             ),
           ),
           Switch(

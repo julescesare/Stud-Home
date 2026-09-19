@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stud_home/models/user_model.dart';
 import 'package:stud_home/theme/app_colors.dart';
+import 'package:stud_home/theme/app_text_styles.dart';
 import 'package:stud_home/views/widgets/photo_carousel.dart';
 
 import '../../../controllers/auth_controller.dart';
@@ -66,17 +67,12 @@ class PropertyDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           property.title,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: _kGray800,
-                          ),
+                          style: AppTextStyles.title.copyWith(color: _kGray800),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           "📍 ${property.streetAddress}, ${property.city}",
-                          style: const TextStyle(
-                            fontSize: 12,
+                          style: AppTextStyles.caption.copyWith(
                             color: _kGray400,
                           ),
                         ),
@@ -87,8 +83,7 @@ class PropertyDetailScreen extends StatelessWidget {
                         const SizedBox(height: 14),
                         Text(
                           property.description,
-                          style: const TextStyle(
-                            fontSize: 12,
+                          style: AppTextStyles.caption.copyWith(
                             color: _kGray600,
                             height: 1.6,
                           ),
@@ -96,8 +91,7 @@ class PropertyDetailScreen extends StatelessWidget {
                         const SizedBox(height: 14),
                         Text(
                           property.description,
-                          style: const TextStyle(
-                            fontSize: 12,
+                          style: AppTextStyles.caption.copyWith(
                             color: _kGray600,
                             height: 1.6,
                           ),
@@ -157,17 +151,10 @@ class PropertyDetailScreen extends StatelessWidget {
   ) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(fontSize: 11, color: _kGray600)),
+        Text(label, style: AppTextStyles.label.copyWith(color: _kGray600)),
         const SizedBox(height: 2),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            color: valueColor,
-          ),
-        ),
-        Text(hint, style: const TextStyle(fontSize: 10, color: _kGray400)),
+        Text(value, style: AppTextStyles.subtitle.copyWith(color: valueColor)),
+        Text(hint, style: AppTextStyles.caption.copyWith(color: _kGray400)),
       ],
     );
   }
@@ -201,8 +188,7 @@ class PropertyDetailScreen extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: 10,
+        style: AppTextStyles.caption.copyWith(
           fontWeight: FontWeight.w600,
           color: color,
         ),
@@ -236,12 +222,11 @@ class PropertyDetailScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.layers_outlined, size: 16, color: _kViolet),
+                const Icon(Icons.layers_outlined, size: 20, color: _kViolet),
                 const SizedBox(width: 6),
                 Text(
                   "Ce logement est aussi proposé par ${otherOffers.length} autre${otherOffers.length > 1 ? 's' : ''} agence${otherOffers.length > 1 ? 's' : ''}",
-                  style: const TextStyle(
-                    fontSize: 12,
+                  style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.w600,
                     color: _kGray800,
                   ),
@@ -278,8 +263,7 @@ class PropertyDetailScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 offer.title,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w600,
                   color: _kGray800,
                 ),
@@ -289,14 +273,13 @@ class PropertyDetailScreen extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               offer.formattedPrice,
-              style: const TextStyle(
-                fontSize: 13,
+              style: AppTextStyles.body.copyWith(
                 fontWeight: FontWeight.w700,
                 color: _kIndigo,
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.chevron_right, size: 16, color: _kIndigo),
+            const Icon(Icons.chevron_right, size: 20, color: _kIndigo),
           ],
         ),
       ),
@@ -314,14 +297,14 @@ class PropertyDetailScreen extends StatelessWidget {
         border: Border.all(color: _kGray200),
       ),
       alignment: Alignment.center,
-      child: const Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.location_on_outlined, color: Color(0xFF818CF8)),
           SizedBox(height: 2),
           Text(
             "Voir sur la carte",
-            style: TextStyle(fontSize: 10, color: _kGray400),
+            style: AppTextStyles.caption.copyWith(color: _kGray400),
           ),
         ],
       ),
@@ -352,7 +335,7 @@ class PropertyDetailScreen extends StatelessWidget {
           ),
           child: const Text(
             "Contacter le propriétaire",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+            style: AppTextStyles.button,
           ),
         ),
       ),
@@ -400,7 +383,7 @@ class PropertyDetailScreen extends StatelessWidget {
             ),
             title: const Text(
               "Coordonnées du propriétaire",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              style: AppTextStyles.subtitle,
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -410,14 +393,14 @@ class PropertyDetailScreen extends StatelessWidget {
                   children: [
                     const Icon(
                       Icons.person_outline,
-                      size: 18,
+                      size: 22,
                       color: _kGray600,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         owner.fullName,
-                        style: const TextStyle(fontSize: 13, color: _kGray800),
+                        style: AppTextStyles.body.copyWith(color: _kGray800),
                       ),
                     ),
                   ],
@@ -427,14 +410,14 @@ class PropertyDetailScreen extends StatelessWidget {
                   children: [
                     const Icon(
                       Icons.email_outlined,
-                      size: 18,
+                      size: 22,
                       color: _kGray600,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         owner.email,
-                        style: const TextStyle(fontSize: 13, color: _kGray800),
+                        style: AppTextStyles.body.copyWith(color: _kGray800),
                       ),
                     ),
                   ],

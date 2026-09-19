@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:stud_home/models/property_model.dart';
 import 'package:stud_home/theme/app_colors.dart';
+import 'package:stud_home/theme/app_text_styles.dart';
 import 'package:stud_home/views/screens/profile/profile_screen.dart';
 import 'package:stud_home/views/widgets/property_card.dart';
 
@@ -126,19 +127,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   Text(
                     "Bonjour${userName.isNotEmpty ? ', ${userName.split(' ').first}' : ''} 👋",
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: _kGray400,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: AppTextStyles.caption.copyWith(color: _kGray400),
                   ),
-                  const Text(
+                  Text(
                     "Trouvez votre logement",
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: _kGray800,
-                    ),
+                    style: AppTextStyles.title.copyWith(color: _kGray800),
                   ),
                 ],
               ),
@@ -160,7 +153,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.search, size: 16, color: _kGray400),
+                const Icon(Icons.search, size: 20, color: _kGray400),
                 const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
@@ -170,10 +163,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     // chaque frappe (Firestore ne fait pas de recherche
                     // plein texte nativement).
                     onChanged: (value) => setState(() => _searchQuery = value),
-                    style: const TextStyle(fontSize: 13),
-                    decoration: const InputDecoration(
+                    style: AppTextStyles.body,
+                    decoration: InputDecoration(
                       hintText: "Ville, école ou campus…",
-                      hintStyle: TextStyle(fontSize: 13, color: _kGray400),
+                      hintStyle: AppTextStyles.body.copyWith(color: _kGray400),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
@@ -186,7 +179,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       _searchController.clear();
                       setState(() => _searchQuery = "");
                     },
-                    child: const Icon(Icons.close, size: 16, color: _kGray400),
+                    child: const Icon(Icons.close, size: 20, color: _kGray400),
                   ),
               ],
             ),
@@ -237,9 +230,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
+          style: AppTextStyles.caption.copyWith(
             color: active ? Colors.white : _kGray600,
           ),
         ),
@@ -326,9 +317,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Text(
             "${visibleProperties.length} logements trouvés".toUpperCase(),
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.label.copyWith(
               color: _kGray400,
               letterSpacing: 0.5,
             ),

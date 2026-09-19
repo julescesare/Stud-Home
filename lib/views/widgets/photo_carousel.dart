@@ -134,8 +134,8 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 36,
-        height: 36,
+        width: 44,
+        height: 44,
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
@@ -146,7 +146,7 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
             ),
           ],
         ),
-        child: Icon(icon, size: 18, color: color),
+        child: Icon(icon, size: 22, color: color),
       ),
     );
   }
